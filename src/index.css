@@ -1,0 +1,727 @@
+/* ============================================================
+   ScamShield AI — Global Stylesheet
+   ============================================================
+
+   Contents
+   ────────
+   1.  CSS Custom Properties (design tokens)
+   2.  Reset & base
+   3.  App shell & layout
+   4.  Header
+   5.  Shared section titles & descriptions
+   6.  Cards
+   7.  Example-message buttons
+   8.  Message input & textarea
+   9.  Buttons
+   10. Analysing indicator / spinner
+   11. Results section (entrance animation)
+   12. Risk score card
+   13. Risk meter
+   14. Warning signs list
+   15. Explanation card
+   16. Recommendations card
+   17. Footer
+   18. Responsive overrides (≤ 600 px)
+   ============================================================ */
+
+
+/* ── 1. CSS Custom Properties ───────────────────────────────── */
+:root {
+  /* Brand */
+  --clr-primary:       #1e3a5f;
+  --clr-primary-light: #2d5282;
+  --clr-accent:        #0ea5e9;
+
+  /* Risk levels */
+  --clr-low:           #16a34a;
+  --clr-low-bg:        #f0fdf4;
+  --clr-low-border:    #bbf7d0;
+  --clr-medium:        #d97706;
+  --clr-medium-bg:     #fffbeb;
+  --clr-medium-border: #fde68a;
+  --clr-high:          #dc2626;
+  --clr-high-bg:       #fef2f2;
+  --clr-high-border:   #fecaca;
+
+  /* Neutrals */
+  --clr-bg:            #f0f4f8;
+  --clr-surface:       #ffffff;
+  --clr-border:        #e2e8f0;
+  --clr-text:          #1a202c;
+  --clr-text-muted:    #64748b;
+  --clr-text-light:    #94a3b8;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow:    0 1px 3px rgba(0, 0, 0, 0.10), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.10), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+  /* Geometry */
+  --radius:      12px;
+  --radius-sm:   8px;
+  --radius-pill: 9999px;
+}
+
+
+/* ── 2. Reset & base ────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Helvetica, Arial, sans-serif;
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+img, svg { display: block; }
+button   { cursor: pointer; font-family: inherit; }
+
+
+/* ── 3. App shell & layout ──────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+
+/* ── 4. Header ──────────────────────────────────────────────── */
+.header {
+  background: linear-gradient(
+    135deg,
+    var(--clr-primary) 0%,
+    var(--clr-primary-light) 100%
+  );
+  color: #ffffff;
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.header-content {
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* Push font controls to the far right */
+  justify-content: space-between;
+}
+
+/* Branding group (icon + title/tagline) — keeps them together */
+.header-branding {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+}
+
+.header-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.header-tagline {
+  font-size: 0.875rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+/* ── Font-size controls ─────────────────────────────────────── */
+.font-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-shrink: 0;
+}
+
+/* A− and A+ buttons */
+.font-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  /* Prevent the button text from scaling with the app font size */
+  font-size: 0.75rem;
+}
+
+.font-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.font-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.font-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.font-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Current size label between the two buttons */
+.font-label {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  min-width: 3.5rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+
+/* ── 5. Shared section titles & descriptions ────────────────── */
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-primary);
+  margin-bottom: 0.4rem;
+}
+
+.section-desc {
+  font-size: 0.875rem;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.875rem;
+}
+
+.results-title {
+  font-size: 1.15rem;
+  margin-bottom: 0; /* row flex handles spacing */
+}
+
+/* Flex row that holds the 'Analysis Complete' heading and read-aloud button */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Read-aloud / Stop button */
+.btn-read-aloud {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1.5px solid var(--clr-accent);
+  background: transparent;
+  color: var(--clr-accent);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-read-aloud:hover:not(:disabled) {
+  background: var(--clr-accent);
+  color: #ffffff;
+}
+
+/* Active / speaking state */
+.btn-read-aloud--active {
+  background: var(--clr-accent);
+  color: #ffffff;
+}
+
+.btn-read-aloud--active:hover:not(:disabled) {
+  background: #0284c7;
+  border-color: #0284c7;
+}
+
+.btn-read-aloud:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-read-aloud:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+
+/* ── 6. Cards ───────────────────────────────────────────────── */
+.card {
+  background: var(--clr-surface);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--clr-border);
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 0.975rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  margin-bottom: 1rem;
+}
+
+
+/* ── 7. Example-message buttons ─────────────────────────────── */
+.examples-section {
+  margin-bottom: 1.75rem;
+}
+
+.examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.75rem;
+}
+
+.example-card {
+  background: var(--clr-surface);
+  border: 1.5px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.875rem 1rem;
+  text-align: left;
+  transition:
+    border-color 0.15s ease,
+    box-shadow   0.15s ease,
+    transform    0.15s ease;
+}
+
+.example-card:hover {
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+  transform: translateY(-2px);
+}
+
+.example-card:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+.example-card:active {
+  transform: translateY(0);
+}
+
+.example-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.example-hint {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+}
+
+
+/* ── 8. Message input & textarea ────────────────────────────── */
+.input-section {
+  margin-bottom: 1.5rem;
+}
+
+.message-textarea {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--clr-text);
+  background: var(--clr-surface);
+  resize: vertical;
+  min-height: 160px;
+  display: block;
+  margin-bottom: 0.4rem;
+  transition:
+    border-color 0.15s ease,
+    box-shadow   0.15s ease;
+}
+
+.message-textarea:focus {
+  outline: none;
+  border-color: var(--clr-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.18);
+}
+
+.message-textarea::placeholder {
+  color: var(--clr-text-light);
+}
+
+.char-count {
+  font-size: 0.775rem;
+  color: var(--clr-text-light);
+  margin-bottom: 0.875rem;
+}
+
+.input-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+
+/* ── 9. Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    background     0.15s ease,
+    border-color   0.15s ease,
+    box-shadow     0.15s ease,
+    opacity        0.15s ease,
+    transform      0.1s ease;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn:focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 2px;
+}
+
+/* Primary — dark blue */
+.btn-primary {
+  background: var(--clr-primary);
+  color: #ffffff;
+  border-color: var(--clr-primary);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--clr-primary-light);
+  border-color: var(--clr-primary-light);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ghost — outlined neutral */
+.btn-ghost {
+  background: transparent;
+  color: var(--clr-text-muted);
+  border-color: var(--clr-border);
+}
+
+.btn-ghost:hover {
+  background: var(--clr-bg);
+  color: var(--clr-text);
+  border-color: var(--clr-text-light);
+}
+
+
+/* ── 10. Analysing indicator / spinner ──────────────────────── */
+.analysing-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: var(--clr-surface);
+  border-radius: var(--radius);
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text-muted);
+  font-size: 0.9375rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.spinner {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--clr-border);
+  border-top-color: var(--clr-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+/* ── 11. Results section (entrance animation) ───────────────── */
+.results-section {
+  animation: fadeSlideIn 0.35s ease both;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ── 12. Risk score card ────────────────────────────────────── */
+.risk-card {
+  border-left: 4px solid var(--clr-border);
+}
+
+.risk-card--low    { border-left-color: var(--clr-low);    background: var(--clr-low-bg); }
+.risk-card--medium { border-left-color: var(--clr-medium); background: var(--clr-medium-bg); }
+.risk-card--high   { border-left-color: var(--clr-high);   background: var(--clr-high-bg); }
+
+.risk-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.risk-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--clr-text-muted);
+  margin-bottom: 0.2rem;
+}
+
+.risk-score { line-height: 1; }
+
+.risk-score-value {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--clr-text);
+}
+
+.risk-score-max {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+}
+
+/* Risk level badge */
+.risk-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  align-self: flex-start;
+}
+
+.risk-badge--low    { background: var(--clr-low);    color: #fff; }
+.risk-badge--medium { background: var(--clr-medium); color: #fff; }
+.risk-badge--high   { background: var(--clr-high);   color: #fff; }
+
+
+/* ── 13. Risk meter (animated progress bar) ─────────────────── */
+.risk-meter {
+  height: 10px;
+  background: rgba(0, 0, 0, 0.07);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.risk-meter-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  /* Smooth spring-like transition triggered by width change via useEffect */
+  transition: width 0.9s cubic-bezier(0.34, 1.3, 0.64, 1);
+}
+
+.risk-meter-fill--low    { background: var(--clr-low); }
+.risk-meter-fill--medium { background: var(--clr-medium); }
+.risk-meter-fill--high   { background: var(--clr-high); }
+
+.risk-meter-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.725rem;
+  color: var(--clr-text-muted);
+  user-select: none;
+}
+
+
+/* ── 14. Warning signs list ─────────────────────────────────── */
+.warnings-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.warning-item {
+  display: flex;
+  gap: 0.875rem;
+  align-items: flex-start;
+  padding: 0.75rem;
+  background: var(--clr-bg);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
+}
+
+.warning-icon {
+  font-size: 1.375rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 0.1em;
+}
+
+.warning-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--clr-text);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.warning-desc {
+  font-size: 0.825rem;
+  color: var(--clr-text-muted);
+  line-height: 1.5;
+}
+
+.no-warnings {
+  font-size: 0.9375rem;
+  color: var(--clr-low);
+  font-weight: 600;
+}
+
+
+/* ── 15. Explanation card ───────────────────────────────────── */
+.explanation-text {
+  font-size: 0.9375rem;
+  color: var(--clr-text);
+  line-height: 1.75;
+}
+
+
+/* ── 16. Recommendations card ───────────────────────────────── */
+.recommendations-card {
+  border-top: 3px solid var(--clr-border);
+}
+
+.recommendations-card--low    { border-top-color: var(--clr-low); }
+.recommendations-card--medium { border-top-color: var(--clr-medium); }
+.recommendations-card--high   { border-top-color: var(--clr-high); }
+
+.recommendations-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.recommendation-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+/* Numbered circle */
+.rec-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  margin-top: 0.15em;
+  background: var(--clr-primary);
+}
+
+.rec-number--low    { background: var(--clr-low); }
+.rec-number--medium { background: var(--clr-medium); }
+.rec-number--high   { background: var(--clr-high); }
+
+.rec-text {
+  font-size: 0.9rem;
+  color: var(--clr-text);
+  line-height: 1.65;
+  padding-top: 0.2rem;
+}
+
+
+/* ── 17. Footer ─────────────────────────────────────────────── */
+.footer {
+  background: var(--clr-primary);
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+  padding: 1.25rem;
+  font-size: 0.825rem;
+}
+
+
+/* ── 18. Responsive overrides (≤ 600 px) ───────────────────── */
+@media (max-width: 600px) {
+  .header-title      { font-size: 1.4rem; }
+  .header-tagline    { font-size: 0.8rem; }
+  /* Hide tagline on very small screens to give font controls room */
+  .header-tagline    { display: none; }
+  .main-content      { padding: 1.25rem 1rem; }
+  .card              { padding: 1.125rem; }
+  .risk-score-value  { font-size: 2.5rem; }
+  .examples-grid     { grid-template-columns: 1fr; }
+
+  .input-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn { justify-content: center; }
+}
